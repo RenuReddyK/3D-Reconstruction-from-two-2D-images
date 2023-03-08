@@ -26,24 +26,12 @@ def plot_lines(lines, h, w):
 
 
 def plot_epipolar_lines(image1, image2, uncalibrated_1, uncalibrated_2, E, K, plot=True):
-    """ Plots the epipolar lines on the images
-    """
-
-    """ YOUR CODE HERE
-    """
-    print(E)
-    #E = ransac_estimator(image1, image2, num_iterations=60000)
-    #print("E",E)
+    #Plots the epipolar lines on the images
     K_inv = np.linalg.inv(K)
-    print("K",K)
     F = np.matmul(np.matmul(K_inv.T, E),K_inv)
     FT = F.T
-    print("F",F)
     epipolar_lines_in_1 = np.matmul(FT,uncalibrated_2)
     epipolar_lines_in_2 = np.matmul(F,uncalibrated_1)
-
-    """ END YOUR CODE
-    """
 
     if(plot):
 
