@@ -11,51 +11,25 @@ def reconstruct3D(transform_candidates, calibrated_1, calibrated_2):
   for candidate in transform_candidates:
     R = candidate['R']
     T = candidate['T']
-    print("calib_shape",calibrated_1.shape[0])
-    #print(calibrated_1.shape)
-    #lambdas = np.zeros((2, calibrated_1.shape[0]))
-    #lambdas =[]
-    """ YOUR CODE HERE
-    """
+    
     lambdas1 =[]
     lambdas2 =[]
-    #print(calibrated_1[0].shape)
-    #print(calibrated_2[1].shape)
-    #print(R.shape)
-    #print(T.shape)
-    # for i in range(len(transform_candidates)):
+   
     for i in range(calibrated_1.shape[0]):
-        #print(candidate)
         x1 = calibrated_1[i].reshape((3,1))
         x2 = calibrated_2[i].reshape((3,1))
-        #print(x1)
         A = np.zeros((3,2))
         A = np.hstack((x2, - np.matmul(R,x1)))
-        #print(A.shape)
         B = np.array(T)
-        #print(T.shape)
-        # l1, l2 = np.matmul(np.linalg.pinv(A), B)
-        # print(l1)
-        # print(l2)
 
         lambda1, lambda2 = np.linalg.lstsq(A,B)[0]
-
-        print(lambda1)
         lambdas1.append(lambda1)
         lambdas2.append(lambda2)
-        #lambdas1 = np.array(lambdas1)
-        #lambdas2 = np.array(lambdas2)
-        # np.append(lambdas1,lambda1)
-        # np.append(lambdas2, lambda2)
+        
     lambdas = np.vstack((lambdas1, lambdas2))
-    print(lambdas.shape)
-        # lambdas = ls
-
+    
     print("lambdas",lambdas)
-        #print("lambdas",lambda2.shape)
-
-    """ END YOUR CODE
-    """
+        
     num_front = np.sum(np.logical_and(lambdas[0]>0, lambdas[1]>0))
 
     if num_front > best_num_front:
@@ -66,9 +40,9 @@ def reconstruct3D(transform_candidates, calibrated_1, calibrated_2):
     else:
       print("not best", num_front)
 
-
   P1 = best_lambdas[1].reshape(-1, 1) * calibrated_1
   P2 = best_lambdas[0].reshape(-1, 1) * calibrated_2
   T = best_candidate['T']
   R = best_candidate['R']
+  
   return P1, P2, T, R
